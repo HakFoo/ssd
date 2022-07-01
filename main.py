@@ -1,16 +1,18 @@
 from machine import Pin, I2C
 import network
-import urequests as requests
+import lib.urequests as requests
 import ujson as json
 import time
-from ssd1306 import SSD1306_I2C
-from HZK import HZK
+from lib.ssd1306 import SSD1306_I2C
+from lib.ChineseFont import ChineseFont as CF
 
 i2c = I2C(scl=Pin(22), sda=Pin(21))
 oled = SSD1306_I2C(128, 64, i2c, addr=0x3c)
 
 # 高德地图 token
 token = 'e1a2a87d5338cc03afd6d119138d9225'
+
+c8 = CF('font_8.data')
 
 
 def linked_network():
@@ -50,33 +52,6 @@ def get_lives_weather(adcode, token):
         print('GET weather error')
 
 
-def show_zh(zh_str, x_axis, y_axis):
-    global oled
-    words = 0
-    for k in zh_str:
-        byte_data = HZK(k)
-        data_len = len(byte_data)
-        zh_size = 0
-
-    for i in range(8, 65):
-        num = int((i-1)/8)+1
-        if((data_len/num) == i):
-            ch_size = i
-            break
-
-    if ch_size == 0:
-        print(k, "字模，数据量不匹配，无法显示。")
-    else:
-        for i in range(0, num):
-            for y in range(ch_size*i, ch_size*(i+1)):
-                a = '{:0>8b}'.format(byte_data[y])
-                for x in range(0, 8):
-                    oled.pixel(x_axis + words + x+8*i, y %
-                               ch_size + y_axis, int(a[x]))
-
-        words += ch_size
-
-
 def main():
     linked_network()
     try:
@@ -86,7 +61,9 @@ def main():
     except KeyError:
         print('error')
 
-    show_zh('你好', 0, 0)
+    f1 = c8.get_bit_map('好')
+
+    oled.blit(f1, 0, 0)
     # oled.text('font16x16', 0, 20, 16)
     oled.show()
 
