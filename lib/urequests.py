@@ -1,4 +1,3 @@
-
 import usocket
 
 class Response:
@@ -117,7 +116,6 @@ def patch(url, **kw):
 
 def delete(url, **kw):
   return request("DELETE", url, **kw)
-
 
 
 

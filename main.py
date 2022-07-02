@@ -4,15 +4,16 @@ import lib.urequests as requests
 import ujson as json
 import time
 from lib.ssd1306 import SSD1306_I2C
-from lib.ChineseFont import ChineseFont as CF
 
-i2c = I2C(scl=Pin(22), sda=Pin(21))
+
+i2c = I2C(0, scl=Pin(22), sda=Pin(21))
 oled = SSD1306_I2C(128, 64, i2c, addr=0x3c)
+
+oled.font_load("GBK-12.fon")
+oled.fill(0)
 
 # 高德地图 token
 token = 'e1a2a87d5338cc03afd6d119138d9225'
-
-c8 = CF('font_8.data')
 
 
 def linked_network():
@@ -60,11 +61,8 @@ def main():
         get_lives_weather(adcode, token)
     except KeyError:
         print('error')
-
-    f1 = c8.get_bit_map('好')
-
-    oled.blit(f1, 0, 0)
-    # oled.text('font16x16', 0, 20, 16)
+    oled.fill(0)
+    oled.show_bmp('qing.bmp', 0, 0)
     oled.show()
 
 
