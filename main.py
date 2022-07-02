@@ -1,15 +1,15 @@
 from machine import Pin, I2C
 import network
-import lib.urequests as requests
+import urequests as requests
 import ujson as json
 import time
-from lib.ssd1306 import SSD1306_I2C
+from ssd1306 import SSD1306_I2C
 
 
 i2c = I2C(0, scl=Pin(22), sda=Pin(21))
 oled = SSD1306_I2C(128, 64, i2c, addr=0x3c)
 
-oled.font_load("GBK-12.fon")
+oled.font_load("GB2312-32.fon")
 oled.fill(0)
 
 # 高德地图 token
@@ -54,15 +54,15 @@ def get_lives_weather(adcode, token):
 
 
 def main():
-    linked_network()
-    try:
-        # 高德地图天气API
-        city, adcode = get_city(token)
-        get_lives_weather(adcode, token)
-    except KeyError:
-        print('error')
+    # linked_network()
+    # try:
+    #     # 高德地图天气API
+    #     city, adcode = get_city(token)
+    #     get_lives_weather(adcode, token)
+    # except KeyError:
+    #     print('error')
     oled.fill(0)
-    oled.show_bmp('qing.bmp', 0, 0)
+    oled.show_bmp('qing.bmp', 32, 64)
     oled.show()
 
 
